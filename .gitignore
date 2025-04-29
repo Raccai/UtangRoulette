@@ -1,0 +1,62 @@
+# --- General ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+*.log
+.env
+.env.*
+!.env.example
+*.DS_Store
+Thumbs.db
+
+# --- SvelteKit ---
+.svelte-kit/
+build/          # User requested build output folder
+# If using adapter-static, output might be 'build/' by default
+# If using adapter-node, output might be 'build/'
+
+# --- Capacitor ---
+www/            # Capacitor copies web assets here before sync - ALWAYS ignore
+resources/      # User requested. Usually contains source icons/splash.
+                # NOTE: It's often recommended to commit the *source* assets in `resources/`,
+                # but ignore generated platform-specific resources *inside* android/ and ios/.
+                # Ignoring the top-level resources/ folder means you need another way
+                # to manage/share these source assets if collaborating.
+
+# --- Android Platform (Capacitor) ---
+# DO NOT ignore the top-level 'android/' folder itself!
+# It contains necessary project configuration and source code.
+# Ignore specific generated files and sensitive data WITHIN android/
+
+android/app/build/
+android/build/
+android/.gradle/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/.idea/
+android/.settings/
+android/local.properties
+android/secrets.properties # If used for secrets
+android/app/google-services.json # Ignore if environment-specific or contains sensitive keys
+# Keystore files - VERY IMPORTANT to ignore
+android/app/*.jks
+android/app/*.keystore
+android/*.jks
+android/*.keystore
+android/keystore.properties # Often contains keystore passwords/aliases
+# Ignore generated resource files within the native project
+android/app/src/main/res/drawable-*dpi/ # Generated drawables
+android/app/src/main/res/mipmap-*dpi/ # Generated mipmaps
+# Add other generated resource patterns if needed
+
+# --- IDE/Editor specific ---
+.vscode/
+*.code-workspace
+.idea/
+*.iml
+
+# --- Other ---
+*.swp
+*.tmp
+*~

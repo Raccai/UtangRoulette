@@ -1,0 +1,6 @@
+{
+  "appId": "com.example.utangroulette",
+  "appName": "UtangRoulette",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

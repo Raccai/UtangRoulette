@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Utang Roulette</string>
+    <string name="title_activity_main">Utang Roulette</string>
+    <string name="package_name">com.raccai.utangroulette</string>
+    <string name="custom_url_scheme">com.raccai.utangroulette</string>
+</resources>
