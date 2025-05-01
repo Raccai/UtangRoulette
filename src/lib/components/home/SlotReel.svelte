@@ -22,12 +22,12 @@
   onMount(() => {
     // Calculate dimensions on mount
     const timeoutId = setTimeout(() => {
-        requestAnimationFrame(() => {
-            calculateDimensions();
-            if (isReady) {
-                setInitialPosition();
-            }
-        });
+      requestAnimationFrame(() => {
+        calculateDimensions();
+        if (isReady) {
+          setInitialPosition();
+        }
+      });
     }, 50); // Short delay
 
     return () => {
@@ -37,102 +37,108 @@
   });
 
   function calculateDimensions() {
-      if (!windowElement || !reelElement || items.length === 0) return;
-      windowHeight = windowElement.offsetHeight;
-      const firstItem = reelElement.querySelector('.slot-item');
-      if (firstItem) {
-          const styles = getComputedStyle(firstItem);
-          const marginTop = parseFloat(styles.marginTop) || 0;
-          const marginBottom = parseFloat(styles.marginBottom) || 0;
-          itemHeight = firstItem.offsetHeight + marginTop + marginBottom;
-          centeringOffset = (windowHeight / 2) - (itemHeight / 2);
-          if (itemHeight > 0) {
-              isReady = true;
-              console.log('[SlotReel Mounted & Ready]', { itemHeight, windowHeight, centeringOffset });
-          } else {
-              console.error("[SlotReel] Calculated itemHeight is zero!");
-              isReady = false;
-          }
+    if (!windowElement || !reelElement || items.length === 0) return;
+    windowHeight = windowElement.offsetHeight;
+    const firstItem = reelElement.querySelector('.slot-item');
+    if (firstItem) {
+      const styles = getComputedStyle(firstItem);
+      const marginTop = parseFloat(styles.marginTop) || 0;
+      const marginBottom = parseFloat(styles.marginBottom) || 0;
+      itemHeight = firstItem.offsetHeight + marginTop + marginBottom;
+      centeringOffset = (windowHeight / 2) - (itemHeight / 2);
+      if (itemHeight > 0) {
+        isReady = true;
+        console.log('[SlotReel Mounted & Ready]', { itemHeight, windowHeight, centeringOffset });
       } else {
-           console.error("[SlotReel] Cannot find .slot-item on mount.");
-           isReady = false;
+        console.error("[SlotReel] Calculated itemHeight is zero!");
+        isReady = false;
       }
+    } else {
+      console.error("[SlotReel] Cannot find .slot-item on mount.");
+      isReady = false;
+    }
   }
 
   function setInitialPosition() {
-      if (!isReady || !reelElement || items.length === 0) return;
-      const middleRepetitionIndex = Math.floor(15 / 2);
-      const initialIndex = items.length * middleRepetitionIndex;
-      const initialTranslateY = -((initialIndex * itemHeight) - centeringOffset);
-      reelElement.style.transition = 'none';
-      reelElement.style.transform = `translateY(${initialTranslateY}px)`;
-      console.log(`[SlotReel] Initial position set to Y: ${initialTranslateY.toFixed(0)}`);
+    if (!isReady || !reelElement || items.length === 0) return;
+
+    const middleRepetitionIndex = Math.floor(15 / 2);
+    const initialIndex = items.length * middleRepetitionIndex;
+    const initialTranslateY = -((initialIndex * itemHeight) - centeringOffset);
+
+    reelElement.style.transition = 'none';
+    reelElement.style.transform = `translateY(${initialTranslateY}px)`;
+    console.log(`[SlotReel] Initial position set to Y: ${initialTranslateY.toFixed(0)}`);
   }
 
   // Exported function for parent to call
   export async function spinTo(targetResult) {
-      // Use isReady flag which depends on dimension calculation
-      if (isVisuallySpinning || !isReady || !targetResult || !reelElement) {
-          console.warn("SlotReel cannot spin", { isVisuallySpinning, isReady, targetResult });
-          return Promise.reject("Reel not ready or already spinning"); // Return promise status
-      }
+    // Use isReady flag which depends on dimension calculation
+    if (isVisuallySpinning || !isReady || !targetResult || !reelElement) {
+      console.warn("SlotReel cannot spin", { isVisuallySpinning, isReady, targetResult });
+      return Promise.reject("Reel not ready or already spinning"); // Return promise status
+    }
 
-      isVisuallySpinning = true;
-      if (spinTimeoutId) clearTimeout(spinTimeoutId);
+    isVisuallySpinning = true;
+    if (spinTimeoutId) clearTimeout(spinTimeoutId);
 
-      // --- Find winner and calculate positions ---
-      const winningIndexOriginal = items.findIndex(item => item.name === targetResult.name);
-      if (winningIndexOriginal === -1) { /* ... error handling ... */ isVisuallySpinning = false; return Promise.reject("Winner not found"); }
-      const targetRepetitionIndex = Math.floor(15 / 2) + 2;
-      const targetIndexInDisplay = (items.length * targetRepetitionIndex) + winningIndexOriginal;
-      const finalTranslateY = -((targetIndexInDisplay * itemHeight) - centeringOffset);
-      const fullSpinRounds = 8 + Math.floor(Math.random() * 4);
-      const distancePerRound = items.length * itemHeight;
-      const totalSpinDistance = fullSpinRounds * distancePerRound;
-      const animationTranslateY = finalTranslateY - totalSpinDistance;
+    // --- Find winner and calculate positions ---
+    const winningIndexOriginal = items.findIndex(item => item.name === targetResult.name);
+    if (winningIndexOriginal === -1) { /* ... error handling ... */ isVisuallySpinning = false; return Promise.reject("Winner not found"); }
+    
+    const targetRepetitionIndex = Math.floor(15 / 2) + 2;
+    const targetIndexInDisplay = (items.length * targetRepetitionIndex) + winningIndexOriginal;
+    const finalTranslateY = -((targetIndexInDisplay * itemHeight) - centeringOffset);
+    const fullSpinRounds = 8 + Math.floor(Math.random() * 4);
+    const distancePerRound = items.length * itemHeight;
+    const totalSpinDistance = fullSpinRounds * distancePerRound;
+    const animationTranslateY = finalTranslateY - totalSpinDistance;
 
-      console.log(`[SlotReel] Spinning To: ${targetResult.name}, Final Y: ${finalTranslateY.toFixed(0)}, Anim Y: ${animationTranslateY.toFixed(0)}`);
+    console.log(`[SlotReel] Spinning To: ${targetResult.name}, Final Y: ${finalTranslateY.toFixed(0)}, Anim Y: ${animationTranslateY.toFixed(0)}`);
 
-      // --- Apply Animation ---
-      return new Promise((resolve) => { // Return a promise that resolves when spin finishes
-        // Set transition FIRST
-        const spinTimingFunc = 'cubic-bezier(0.2, 0.3, 0.1, 1.0)';
-        reelElement.style.transition = `transform ${spinDuration / 1000}s ${spinTimingFunc}`;
+    // --- Apply Animation ---
+    return new Promise((resolve) => { // Return a promise that resolves when spin finishes
+      // Set transition FIRST
+      const spinTimingFunc = 'cubic-bezier(0.2, 0.3, 0.1, 1.0)';
+      reelElement.style.transition = `transform ${spinDuration / 1000}s ${spinTimingFunc}`;
 
-        // Apply transform in next frame to ensure transition is registered
-        requestAnimationFrame(() => {
-             reelElement.style.transform = `translateY(${animationTranslateY}px)`;
-        });
-
-        // --- Handle End ---
-        spinTimeoutId = setTimeout(() => {
-            if (!reelElement) return resolve(); // Component destroyed
-            console.log('[SlotReel] Spin ended, snapping.');
-            reelElement.style.transition = 'none';
-            reelElement.style.transform = `translateY(${finalTranslateY}px)`;
-            reelElement.offsetHeight; // Force reflow
-
-            requestAnimationFrame(async () => {
-                if (reelElement) { // Ensure element still exists
-                    reelElement.style.transition = `transform ${spinDuration / 1000}s ${spinTimingFunc}`;
-                }
-                await tick(); // Wait for potential winning class update triggered by parent
-                isVisuallySpinning = false;
-                spinTimeoutId = null;
-                resolve(); // Resolve the promise indicating spin completion
-            });
-        }, spinDuration);
+      // Apply transform in next frame to ensure transition is registered
+      requestAnimationFrame(() => {
+        reelElement.style.transform = `translateY(${animationTranslateY}px)`;
       });
+
+      // --- Handle End ---
+      spinTimeoutId = setTimeout(() => {
+        if (!reelElement) return resolve(); // Component destroyed
+
+        console.log('[SlotReel] Spin ended, snapping.');
+        reelElement.style.transition = 'none';
+        reelElement.style.transform = `translateY(${finalTranslateY}px)`;
+        reelElement.offsetHeight; // Force reflow
+
+        requestAnimationFrame(async () => {
+          if (reelElement) { // Ensure element still exists
+            reelElement.style.transition = `transform ${spinDuration / 1000}s ${spinTimingFunc}`;
+          }
+          await tick(); // Wait for potential winning class update triggered by parent
+
+          isVisuallySpinning = false;
+          spinTimeoutId = null;
+
+          resolve(); // Resolve the promise indicating spin completion
+        });
+      }, spinDuration);
+    });
   }
 
   // Watch for external result changes to apply winning class
   // (Parent sets 'result' prop after spinTo promise resolves)
   $: if (result && !isVisuallySpinning) {
-      console.log("[SlotReel] Applying winning class for:", result.name);
+    console.log("[SlotReel] Applying winning class for:", result.name);
   }
 
   onDestroy(() => {
-      if (spinTimeoutId) clearTimeout(spinTimeoutId);
+    if (spinTimeoutId) clearTimeout(spinTimeoutId);
   });
 </script>
 

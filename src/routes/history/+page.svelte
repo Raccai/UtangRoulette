@@ -18,7 +18,6 @@
     }
     const date = new Date(timestamp);
     // Example format: "Mon, Jul 29, 2024, 2:30 PM"
-    // Adjust options as needed
     const optionsDate = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const optionsTime = { hour: 'numeric', minute: '2-digit', hour12: true };
     return `${date.toLocaleDateString(undefined, optionsDate)}, ${date.toLocaleTimeString(undefined, optionsTime)}`;
@@ -26,9 +25,9 @@
 
   // Handle clearing history
   function confirmClearHistory() {
-      if (confirm("Are you sure you want to clear the entire spin history? This cannot be undone.")) {
-          historyStore.clear();
-      }
+    if (confirm("Are you sure you want to clear the entire spin history? This cannot be undone.")) {
+      historyStore.clear();
+    }
   }
 
   // Reactive variable for history entries
@@ -61,19 +60,15 @@
           <p class="message">{entry.message}</p>
         </div>
       {:else}
-         <!-- This part should theoretically not be reached if historyEntries.length > 0 -->
-         <p class="loading-text">No history entries found.</p>
+        <p class="loading-text">No history entries found.</p>
       {/each}
     </div>
   {:else}
     <p class="empty-history-text">Looks like your spin history is empty. Go spin the wheel!</p>
   {/if}
-
 </div>
 
 <style>
-  /* Assume :root vars and fonts are loaded globally */
-
   .themed-container {
     background-color: none;
     padding: 1rem 2rem 2rem 2rem; /* Top padding smaller */
@@ -119,14 +114,13 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
   .clear-button:hover {
-      
-       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-       transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    transform: translateY(-1px);
   }
-   .clear-button:active {
-       transform: translateY(0px);
-       box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
-   }
+  .clear-button:active {
+    transform: translateY(0px);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
 
 
   .history-list {
@@ -158,17 +152,15 @@
     font-size: 0.85rem;
     padding: 3px 8px;
     border-radius: 5px;
-    color: var(--jeep-cream); /* Default text */
+    color: var(--jeep-cream); 
     text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
-    border-bottom: 3px solid; /* Use border for the underline color effect */
-    /* Background set inline */
+    border-bottom: 3px solid; 
   }
-  /* Adjust text color for light backgrounds */
   .category-tag[style*="background-color: rgb(255, 193, 7)"] /* Yellow */
-   {
-      color: #333;
-      text-shadow: none;
-   }
+  {
+    color: #333;
+    text-shadow: none;
+  }
 
   .timestamp {
     font-size: 0.75rem;
@@ -186,11 +178,11 @@
   }
 
   .empty-history-text, .loading-text {
-      text-align: center;
-      color: var(--jeep-cream);
-      font-size: 1.2rem;
-      padding: 3rem;
-      margin: auto;
-      opacity: 0.8;
+    text-align: center;
+    color: var(--jeep-cream);
+    font-size: 1.2rem;
+    padding: 3rem;
+    margin: auto;
+    opacity: 0.8;
   }
 </style>

@@ -83,22 +83,21 @@
     // --- Adjust Arrow Position AFTER popover position is fixed ---
     // If placement is top/bottom, adjust arrow's horizontal position to point towards target center
     if (placement === 'top' || placement === 'bottom') {
-        const targetCenterX = targetRect.left + targetRect.width / 2;
-        // Calculate where the target center is relative to the popover's left edge
-        const arrowTargetLeft = targetCenterX - left;
-        // Clamp arrow position to stay within the popover bounds (minus arrow size)
-        arrowLeft = `${Math.max(arrowSize, Math.min(arrowTargetLeft, popoverRect.width - arrowSize))}px`;
-        // Keep translateX(-50%) to center the arrow itself over this point
-        arrowTransform = 'translateX(-50%)';
+      const targetCenterX = targetRect.left + targetRect.width / 2;
+      // Calculate where the target center is relative to the popover's left edge
+      const arrowTargetLeft = targetCenterX - left;
+      // Clamp arrow position to stay within the popover bounds (minus arrow size)
+      arrowLeft = `${Math.max(arrowSize, Math.min(arrowTargetLeft, popoverRect.width - arrowSize))}px`;
+      // Keep translateX(-50%) to center the arrow itself over this point
+      arrowTransform = 'translateX(-50%)';
     }
     // Similar logic if placement is left/right (adjust vertical arrow position)
     else if (placement === 'left' || placement === 'right') {
-         const targetCenterY = targetRect.top + targetRect.height / 2;
-         const arrowTargetTop = targetCenterY - top;
-         arrowTop = `${Math.max(arrowSize, Math.min(arrowTargetTop, popoverRect.height - arrowSize))}px`;
-         arrowTransform = 'translateY(-50%)';
+      const targetCenterY = targetRect.top + targetRect.height / 2;
+      const arrowTargetTop = targetCenterY - top;
+      arrowTop = `${Math.max(arrowSize, Math.min(arrowTargetTop, popoverRect.height - arrowSize))}px`;
+      arrowTransform = 'translateY(-50%)';
     }
-
 
     // --- Set Styles ---
     popoverStyle = `top: ${top}px; left: ${left}px; opacity: 1;`; // Ensure opacity is set
@@ -107,12 +106,12 @@
 
   // Recalculate on show or target change (after DOM update)
   $: if (show && targetElement && popoverElement) {
-     // Using rAF ensures measurements are taken after layout
-     requestAnimationFrame(calculatePosition);
+    // Using rAF ensures measurements are taken after layout
+    requestAnimationFrame(calculatePosition);
   }
   // Also recalculate if placement changes while shown
   $: if (show && placement && targetElement && popoverElement) {
-     requestAnimationFrame(calculatePosition);
+    requestAnimationFrame(calculatePosition);
   }
 
   function handleNext() { dispatch('next'); }
@@ -138,7 +137,7 @@
       {#if step < totalSteps}
         <button class="hint-button next" on:click={handleNext}>{nextButtonText}</button>
       {:else}
-         <button class="hint-button finish" on:click={handleFinish}>{finishButtonText}</button>
+        <button class="hint-button finish" on:click={handleFinish}>{finishButtonText}</button>
       {/if}
     </div>
   </div>
@@ -147,21 +146,18 @@
 <style>
   .hint-popover {
     position: fixed;
-    background-color: var(--bg-dark-blue, #1A3A4F); /* Use theme color */
+    background-color: var(--bg-dark-blue, #1A3A4F); 
     color: var(--jeep-cream, #FDFCDC);
-    padding: 0.8rem 1rem; /* Adjust padding */
+    padding: 0.8rem 1rem; 
     border-radius: 8px;
-    border: 2px solid var(--jeep-yellow, #FFC107); /* Thicker border */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    border: 2px solid var(--jeep-yellow, #FFC107); 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
     z-index: 1001;
-    max-width: 260px; /* Slightly smaller max width */
+    max-width: 260px; 
     font-size: 0.9rem;
-    line-height: 1.45; /* Adjust line height */
+    line-height: 1.45; 
     font-family: var(--font-body, 'Archivo Black');
-    /* Start with opacity 0 for transition */
     opacity: 0;
-    /* Ensure transitions don't interfere with positioning calc */
-    /* transition: opacity 0.2s ease-out; */
     will-change: top, left, opacity;
   }
 
@@ -170,16 +166,12 @@
     width: 0;
     height: 0;
     border-style: solid;
-    /* Transition opacity with parent */
-    /* transition: opacity 0.2s ease-out; */
   }
 
   /* Arrow shapes */
   .placement-bottom .hint-arrow {
-    /* Positioned dynamically, styles set shape */
     border-width: 0 8px 8px 8px;
     border-color: transparent transparent var(--jeep-yellow, #FFC107) transparent;
-    /* filter: drop-shadow(0px 2px 1px rgba(0,0,0,0.3)); */ /* Optional shadow */
   }
   .placement-top .hint-arrow {
     border-width: 8px 8px 0 8px;
@@ -196,12 +188,8 @@
 
   .hint-content {
     margin-bottom: 0.75rem;
-    font-weight: normal; /* Use normal weight for body */
+    font-weight: normal; 
   }
-   .hint-content strong {
-       color: var(--jeep-yellow, #FFC107);
-       font-weight: bold;
-   }
 
   .hint-footer {
     display: flex;
@@ -232,8 +220,8 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
   .hint-button.finish {
-      background: var(--jeep-green, #386641);
-      color: var(--jeep-cream, #FDFCDC);
+    background: var(--jeep-green, #386641);
+    color: var(--jeep-cream, #FDFCDC);
   }
   .hint-button:hover { opacity: 0.9; }
   .hint-button:active { transform: scale(0.95); }

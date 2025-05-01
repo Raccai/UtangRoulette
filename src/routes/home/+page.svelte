@@ -8,7 +8,7 @@
 </div>
 
 <style>
-div {
+  div {
     position: absolute; /* Ensures the element overlaps the previous one */
     width: 100%;        /* Full width for smooth transitions */
     height: 100%;       /* Full height for smooth transitions */

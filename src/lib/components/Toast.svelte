@@ -2,7 +2,7 @@
   import { onDestroy } from 'svelte';
 
   export let message = 'Notification';
-  export let duration = 2500; // ms
+  export let duration = 2500;
   export let show = false; // Controlled by parent
 
   let timeoutId = null;

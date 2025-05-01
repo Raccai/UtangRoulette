@@ -1,11 +1,10 @@
 <script>
   import { goto } from "$app/navigation";
-  import { page } from '$app/stores'; // Import the page store
+  import { page } from '$app/stores'; 
   import { onMount, createEventDispatcher } from "svelte";
 
-  // Import images (paths might need adjustment based on your project structure)
   import History from "../assets/images/History.png";
-  import Roulette from "../assets/images/Roulette.png"; // Assuming this is the 'Home/Spin' icon
+  import Roulette from "../assets/images/Roulette.png"; 
   import Achievements from "../assets/images/Medal.png";
 
   const dispatch = createEventDispatcher();
@@ -52,7 +51,7 @@
     aria-label="History"
   >
     <img src={History} alt="History Page" class="nav-icon history-icon">
-     <span>HISTORY</span> 
+    <span>HISTORY</span> 
   </button>
 
   <button
@@ -62,13 +61,11 @@
     aria-label="Achievements"
   >
     <img src={Achievements} alt="Achievements Page" class="nav-icon achievements-icon">
-     <span>AWARDS</span> 
+    <span>AWARDS</span> 
   </button>
 </nav>
 
 <style>
-  /* Assume :root variables are loaded globally */
-
   nav {
     display: grid; /* Use grid for equal spacing */
     grid-template-columns: repeat(3, 1fr); /* 4 equal columns */
@@ -94,7 +91,6 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    /* Remove flex: 1, grid handles sizing */
     transition: background-color 0.2s ease, border-top 0.2s ease;
     position: relative; /* For potential pseudo-elements */
     border-top: 4px solid transparent; /* Placeholder for active border */
@@ -110,10 +106,10 @@
     border-top: 4px solid var(--jeep-yellow, #FFC107); /* Yellow top border when active */
   }
   .nav-button:hover:not(.active) {
-      background-color: rgba(255, 255, 255, 0.08); /* Slight hover effect */
+    background-color: rgba(255, 255, 255, 0.08); /* Slight hover effect */
   }
   .nav-button:active {
-      transform: translateY(1px); /* Simple press effect */
+    transform: translateY(1px); /* Simple press effect */
   }
 
   .nav-icon {
@@ -122,22 +118,20 @@
     width: auto; /* Let width adjust */
     object-fit: contain;
     margin-bottom: 2px; /* Space below icon */
-    /* Remove scale transforms, use height/width */
     filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.4));
   }
 
   .history-icon {
-      height: 32px;
+    height: 32px;
   }
    .achievements-icon {
-      height: 38px;
+    height: 38px;
   }
-
 
   /* Style for the text label */
   .nav-button span {
-      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-      line-height: 1;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    line-height: 1;
   }
 
 </style>

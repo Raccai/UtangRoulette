@@ -1,5 +1,4 @@
 <script>
-  // Using a direct import assuming your build setup handles images correctly
   import JeepneyBG from "../assets/images/JeepneyBG.png";
 </script>
 
@@ -7,7 +6,7 @@
   class="jeepney-background" 
   aria-hidden="true"
 >
-  <!-- Image is now a background-image for better control -->
+  <!-- Image is a background-image for better control (check css below) -->
 </div>
 
 <style>
@@ -31,15 +30,15 @@
     background-image: url('../assets/images/JeepneyBG.png');
 
     /* --- Adjust Opacity and Contrast/Filters --- */
-    opacity: 0.2; /* KEEP this low for subtlety (adjust 0.05 - 0.15) */
+    opacity: 0.2; /* Low for subtlety (adjust 0.05 - 0.15) */
 
-    /* Apply filters to the image layer *before* opacity reduces its overall impact */
+    /* Apply filters to the image layer before opacity reduces its overall impact */
     /* Increase contrast, maybe slightly adjust brightness, optional grayscale */
     filter: contrast(160%) brightness(85%) grayscale(30%);
 
     /* --- Blend Mode (Experiment!) --- */
     /* How the image layer interacts with the blue background underneath */
-     /* mix-blend-mode: luminosity; */ /* Uses image brightness, keeps background color - very subtle */
+    /* mix-blend-mode: luminosity; */ /* Uses image brightness, keeps background color - very subtle */
     mix-blend-mode: overlay; /* Blends light/dark areas - often good for texture */
     /* mix-blend-mode: multiply; */ /* Darkens the background based on image */
     /* mix-blend-mode: screen; */ /* Lightens the background based on image */
@@ -59,9 +58,9 @@
                       linear-gradient(90deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)); /* Slight dark noise */
     background-size: 2px 1px, 1px 2px; /* Creates fine noise pattern */
 
-    /* OR use a noise texture image (if you have one) */
+    /* OR use a noise texture image in the future*/
     /* background-image: url('/path/to/noise-texture.png'); */
-    /* background-repeat: repeat; */
+    /* background-repeat: repeat; Not ideal ngl */
 
     /* How the texture blends */
     mix-blend-mode: overlay; /* Overlay often works well for noise */

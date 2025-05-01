@@ -1,6 +1,7 @@
 <script>
   // Import store helpers and the locked icon image
   import { achievementStore, spinCount, lockedIcon, formatAchievementKey } from "$lib/stores/achievementsStore";
+
   // Import the title image
   import AchievementsTitle from "../../lib/assets/images/AchievementsTitle.png";
   import { fade, fly } from 'svelte/transition';
@@ -15,7 +16,6 @@
 </script>
 
 <div class="achievements-page themed-container" transition:fly|fade={{ y: 200, duration: 400 }} >
-
   <!-- Use the imported Title Image -->
   <img src={AchievementsTitle} alt="Achievements Title" class="page-title-image">
 
@@ -108,8 +108,6 @@
     object-fit: contain; /* Ensure image fits without stretching */
     filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.5)); /* Subtle shadow */
   }
-  /* Removed text-specific styles from title */
-
 
   .achievements-grid-container {
     width: 100%;
@@ -163,36 +161,87 @@
 
   /* Inner content wrapper */
   .badge-content {
-    padding: 0.75rem; width: 100%; height: 100%; display: flex;
-    flex-direction: column; align-items: center; justify-content: flex-start;
-    position: relative; z-index: 2; box-sizing: border-box;
+    padding: 0.75rem; 
+    width: 100%; 
+    height: 100%; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start;
+    position: relative; 
+    z-index: 2; 
+    box-sizing: border-box;
   }
 
   .badge-image-container {
-    width: 70px; height: 70px; margin-bottom: 0.75rem; border-radius: 10px;
-    overflow: hidden; border: 3px solid rgba(0,0,0,0.3); background-color: rgba(0,0,0,0.2);
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    position: relative; z-index: 1;
+    width: 70px; 
+    height: 70px; 
+    margin-bottom: 0.75rem; 
+    border-radius: 10px;
+    overflow: hidden; 
+    border: 3px solid rgba(0,0,0,0.3); 
+    background-color: rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    position: relative; 
+    z-index: 1;
   }
-  .badge-image { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.6; transition: filter 0.3s ease, opacity 0.3s ease; }
+  .badge-image { 
+    display: block; 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    filter: grayscale(1); 
+    opacity: 0.6; 
+    transition: filter 0.3s ease, opacity 0.3s ease; 
+  }
 
-  .badge.unlocked .badge-image-container {border: none; background-color: transparent; }
-  .badge.unlocked .badge-image { filter: grayscale(0); opacity: 1; }
+  .badge.unlocked .badge-image-container {
+    border: none; 
+    background-color: transparent; 
+  }
+  .badge.unlocked .badge-image { 
+    filter: grayscale(0); 
+    opacity: 1; 
+  }
 
-  .badge-text-container { display: flex; flex-direction: column; align-items: center; }
-  .badge-text { display: block; font-weight: bold; font-size: 1rem; line-height: 1.2; margin-bottom: 0.25rem; }
-  .badge-description { font-size: 0.75rem; line-height: 1.3; opacity: 0.8; max-width: 95%; color: inherit; }
+  .badge-text-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; }
+  .badge-text { 
+    display: block; 
+    font-weight: bold; 
+    font-size: 1rem; 
+    line-height: 1.2; 
+    margin-bottom: 0.25rem; 
+  }
+  .badge-description { 
+    font-size: 0.75rem; 
+    line-height: 1.3; 
+    opacity: 0.8; 
+    max-width: 95%; 
+    color: inherit; 
+  }
 
-  .badge.unlocked { background-color: var(--jeep-green, #386641); color: var(--jeep-cream, #FDFCDC); border-color: var(--jeep-yellow, #FFC107); }
-  .badge.locked .badge-text { color: #aaa; }
+  .badge.unlocked { 
+    background-color: var(--jeep-green, #386641); 
+    color: var(--jeep-cream, #FDFCDC); 
+    border-color: var(--jeep-yellow, #FFC107); 
+  }
+  .badge.locked .badge-text { 
+    color: #aaa; 
+  }
 
-   /* Optional: Assign different background colors */
-    .badge.unlocked:nth-of-type(6n + 1) { background-color: var(--jeep-red, #9D2C0E); }
-    .badge.unlocked:nth-of-type(6n + 2) { background-color: var(--jeep-yellow, #FFC107); color: #333; }
-    .badge.unlocked:nth-of-type(6n + 3) { background-color: var(--jeep-teal, #4D7C8A); }
-    .badge.unlocked:nth-of-type(6n + 4) { background-color: var(--jeep-green, #386641); }
-    .badge.unlocked:nth-of-type(6n + 5) { background-color: var(--jeep-blue-light, #61A8C6); }
-    .badge.unlocked:nth-of-type(6n + 0) { background-color: var(--jeep-orange, #E57C23); }
+  /*Assign different background colors */
+  .badge.unlocked:nth-of-type(6n + 1) { background-color: var(--jeep-red, #9D2C0E); }
+  .badge.unlocked:nth-of-type(6n + 2) { background-color: var(--jeep-yellow, #FFC107); color: #333; }
+  .badge.unlocked:nth-of-type(6n + 3) { background-color: var(--jeep-teal, #4D7C8A); }
+  .badge.unlocked:nth-of-type(6n + 4) { background-color: var(--jeep-green, #386641); }
+  .badge.unlocked:nth-of-type(6n + 5) { background-color: var(--jeep-blue-light, #61A8C6); }
+  .badge.unlocked:nth-of-type(6n + 0) { background-color: var(--jeep-orange, #E57C23); }
 
 
   .badge.unlocked:hover {
@@ -235,19 +284,27 @@
     /* Removed initial opacity, control in keyframes */
     z-index: 1;
     pointer-events: none;
-    /* Animation settings remain the same */
     animation: subtle-shine-anim 4.5s ease-in-out infinite;
     animation-delay: calc(var(--animation-delay, 0s) + 1s);
   }
 
   .spin-counter {
-    text-align: center; margin-top: auto; padding-top: 2rem; padding-bottom: 1rem;
-    color: var(--jeep-cream); opacity: 0.8; font-size: 0.9rem; flex-shrink: 0;
+    text-align: center;
+    margin-top: auto; 
+    padding-top: 2rem; 
+    padding-bottom: 1rem;
+    color: var(--jeep-cream); 
+    opacity: 0.8; 
+    font-size: 0.9rem; 
+    flex-shrink: 0;
   }
 
   .loading-text {
-    text-align: center; color: var(--jeep-cream); font-size: 1.2rem;
-    padding: 2rem; margin: auto;
+    text-align: center; 
+    color: var(--jeep-cream); 
+    font-size: 1.2rem;
+    padding: 2rem; 
+    margin: auto;
   }
 
   /* --- Reduced Motion --- */
@@ -256,7 +313,14 @@
       animation: none !important;
       transition: none !important;
     }
-     .badge:hover { transform: none; }
-     .badge.unlocked:hover { transform: none; box-shadow: inset 0 0 6px rgba(0,0,0,0.4), 0 2px 3px rgba(0,0,0,0.3); }
+
+    .badge:hover { 
+      transform: none; 
+    }
+
+    .badge.unlocked:hover { 
+      transform: none; 
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.4), 0 2px 3px rgba(0,0,0,0.3); 
+    }
   }
 </style>

@@ -3,7 +3,7 @@
 </script>
 
 <div class="topbar">
-  <!-- Insert title here -->
+  <!-- Insert title here when utilized in the future, maybe -->
 </div>
 
 <style>

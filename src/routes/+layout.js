@@ -1,5 +1,3 @@
-// src/routes/+layout.js
-
 // This load function runs on initial server load AND subsequent client-side navigations
 // BEFORE the layout/page components render.
 // It should NOT control the initial loading screen visibility, as that's a one-time client event.

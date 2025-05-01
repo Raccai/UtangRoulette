@@ -47,13 +47,12 @@
 
   onMount(() => {
     if (!hintsAlreadyShown) {
-        // Initial delay before starting the check loop
-        setTimeout(() => {
-            console.log("Starting hint check loop...");
-            startHints();
-        }, 500); // Initial delay
+      // Initial delay before starting the check loop
+      setTimeout(() => {
+        console.log("Starting hint check loop...");
+        startHints();
+      }, 500); // Initial delay
     }
-    // ... rest of onMount ...
   });
 
   // --- Hint Control Functions ---
@@ -61,64 +60,65 @@
     console.log("startHints called");
     currentHintStep = 0;
     showHints = true;
+
     // Start the process of finding the target
     findHintTargetWithRetry(currentHintStep);
   }
 
   function nextHint() {
     if (currentHintStep < totalHintSteps - 1) {
-        currentHintStep++;
-        hintTargetElement = null; // Reset target
-        findHintTargetWithRetry(currentHintStep); // Find next target
+      currentHintStep++;
+      hintTargetElement = null; // Reset target
+      findHintTargetWithRetry(currentHintStep); // Find next target
     } else {
-        finishHints();
+      finishHints();
     }
   }
 
   function finishHints() {
-      console.log("Finishing hint sequence.");
-      showHints = false;
-      hintTargetElement = null;
-      markHintsShown(); // Mark as shown in store/localStorage
+    console.log("Finishing hint sequence.");
+    showHints = false;
+    hintTargetElement = null;
+    markHintsShown(); // Mark as shown in store/localStorage
   }
 
   // --- NEW: Function to find target with retries ---
   const MAX_RETRIES = 10;
-  const RETRY_DELAY = 100; // ms between retries
+  const RETRY_DELAY = 100; 
 
   async function findHintTargetWithRetry(stepIndex, retryCount = 0) {
-      if (!showHints || stepIndex !== currentHintStep) return; // Stop if hints hidden or step changed
+    if (!showHints || stepIndex !== currentHintStep) return; // Stop if hints hidden or step changed
 
-      const hint = hintSequence[stepIndex];
-      if (!hint || !hint.selector) {
-          console.error("Invalid hint definition for step", stepIndex);
-          finishHints(); // Cannot proceed
-          return;
-      }
+    const hint = hintSequence[stepIndex];
+    if (!hint || !hint.selector) {
+      console.error("Invalid hint definition for step", stepIndex);
+      finishHints(); // Cannot proceed
+      return;
+    }
 
-      console.log(`Finding target (Attempt ${retryCount + 1}): ${hint.selector}`);
-      await tick(); // Wait for potential DOM updates
+    console.log(`Finding target (Attempt ${retryCount + 1}): ${hint.selector}`);
+    await tick(); // Wait for potential DOM updates
 
-      const target = document.querySelector(hint.selector);
+    const target = document.querySelector(hint.selector);
 
-      if (target) {
-          console.log("Target found:", target);
-          hintTargetElement = target;
-          // Optional: Ensure popover recalculates position AFTER element is set
-          await tick();
-      } else if (retryCount < MAX_RETRIES) {
-          console.log("Target not found, retrying...");
-          setTimeout(() => findHintTargetWithRetry(stepIndex, retryCount + 1), RETRY_DELAY);
+    if (target) {
+      console.log("Target found:", target);
+      hintTargetElement = target;
+      // Optional: Ensure popover recalculates position AFTER element is set
+      await tick();
+    } else if (retryCount < MAX_RETRIES) {
+      console.log("Target not found, retrying...");
+      setTimeout(() => findHintTargetWithRetry(stepIndex, retryCount + 1), RETRY_DELAY);
+    } else {
+      console.warn(`Hint target not found after ${MAX_RETRIES + 1} attempts: ${hint.selector}. Skipping step.`);
+      hintTargetElement = null; // Ensure it's null
+      // Skip to next or finish
+      if (currentHintStep < totalHintSteps - 1) {
+        nextHint();
       } else {
-          console.warn(`Hint target not found after ${MAX_RETRIES + 1} attempts: ${hint.selector}. Skipping step.`);
-          hintTargetElement = null; // Ensure it's null
-          // Skip to next or finish
-          if (currentHintStep < totalHintSteps - 1) {
-              nextHint();
-          } else {
-              finishHints();
-          }
+        finishHints();
       }
+    }
   }
 
   // --- Event Handlers ---
@@ -137,52 +137,60 @@
 
     const unlockedSpinAchievement = incrementSpinCount();
     if (unlockedSpinAchievement) { /* ... show toast ... */
-        setTimeout(() => { toastMessage = `🏆 Achievement Unlocked: First Spin!`; showToast = true; }, 300);
+      setTimeout(() => { toastMessage = `🏆 Achievement Unlocked: First Spin!`; showToast = true; }, 300);
     }
 
     const result = spinTheWheel(currentMode);
     const winner = categoriesData.find(cat => cat.name === result.category);
-    if (!winner) { /* ... error handling ... */ isSpinning = false; return; }
+    if (!winner) { /* ... future error handling ... */ isSpinning = false; return; }
 
     try {
-        await slotReelComponent.spinTo(winner); // Wait for reel animation
+      await slotReelComponent.spinTo(winner); // Wait for reel animation
 
-        // *** ADD TO HISTORY ***
-        historyStore.addEntry(result.category, result.message);
+      // *** ADD TO HISTORY ***
+      historyStore.addEntry(result.category, result.message);
 
-        // --- Runs AFTER SlotReel animation finishes ---
-        spinResultData = result;
-        winningItemForReel = winner;
-        await tick();
+      // --- Runs AFTER SlotReel animation finishes ---
+      spinResultData = result;
+      winningItemForReel = winner;
+      await tick();
 
-        // Check achievements
-        const winnerKey = wheelOptions.find(opt => opt.display === result.category)?.key;
-        let justUnlockedKey = null;
-        if (winnerKey) {
-            // Example checks (replace with your actual logic)
-            if (winnerKey === 'oaParinig' && unlockAchievement('dramaKingQueen')) justUnlockedKey = 'dramaKingQueen';
-            else if (winnerKey === 'biblicalPlague' && unlockAchievement('holyRoller')) justUnlockedKey = 'holyRoller';
-            else if (winnerKey === 'straightGalit' && unlockAchievement('galitGalit')) justUnlockedKey = 'galitGalit';
-            else if (winnerKey === 'tiktokerStyle' && unlockAchievement('tiktokStar')) justUnlockedKey = 'tiktokStar';
-            else if (winnerKey === 'sarcasticAf' && unlockAchievement('sarcasticSupremo')) justUnlockedKey = 'sarcasticSupremo';
-        }
-        if (justUnlockedKey) { /* ... show toast ... */
-            toastMessage = `🏆 Achievement Unlocked: ${formatAchievementKey(justUnlockedKey)}!`; showToast = true;
-        }
+      // Check achievements
+      const winnerKey = wheelOptions.find(opt => opt.display === result.category)?.key;
+      let justUnlockedKey = null;
+      if (winnerKey) {
+        // Current checks
+        if (winnerKey === 'oaParinig' && unlockAchievement('dramaKingQueen')) justUnlockedKey = 'dramaKingQueen';
+        else if (winnerKey === 'biblicalPlague' && unlockAchievement('holyRoller')) justUnlockedKey = 'holyRoller';
+        else if (winnerKey === 'straightGalit' && unlockAchievement('galitGalit')) justUnlockedKey = 'galitGalit';
+        else if (winnerKey === 'tiktokerStyle' && unlockAchievement('tiktokStar')) justUnlockedKey = 'tiktokStar';
+        else if (winnerKey === 'sarcasticAf' && unlockAchievement('sarcasticSupremo')) justUnlockedKey = 'sarcasticSupremo';
+      }
+      if (justUnlockedKey) { /* ... show toast ... */
+        toastMessage = `🏆 Achievement Unlocked: ${formatAchievementKey(justUnlockedKey)}!`; showToast = true;
+      }
 
-        showResultCard = true; // Trigger layout shift, title shrink, and result visibility
-        isSpinning = false; // Re-enable buttons/toggle AFTER all state updates
-
-    } catch (error) { /* ... error handling ... */ isSpinning = false; toastMessage = 'Spin Error!'; showToast = true; }
+      showResultCard = true; // Trigger layout shift, title shrink, and result visibility
+      isSpinning = false; // Re-enable buttons/toggle AFTER all state updates
+    } catch (error) { /* ... current error handling ... */ isSpinning = false; toastMessage = 'Spin Error!'; showToast = true; }
   }
 
   async function handleCopyToClipboard(event) {
     const messageToCopy = event.detail;
-    if (!messageToCopy || !navigator.clipboard) { toastMessage = 'Error: Could not copy!'; showToast = true; return; }
+    if (!messageToCopy || !navigator.clipboard) { 
+      toastMessage = 'Error: Could not copy!'; 
+      showToast = true; 
+      return; 
+    }
+
     try {
-        await navigator.clipboard.writeText(messageToCopy);
-        toastMessage = 'Copied to clipboard!'; showToast = true;
-    } catch (err) { console.error('Failed to copy:', err); toastMessage = 'Error: Copy failed!'; showToast = true; }
+      await navigator.clipboard.writeText(messageToCopy);
+      toastMessage = 'Copied to clipboard!'; showToast = true;
+    } catch (err) { 
+      console.error('Failed to copy:', err); 
+      toastMessage = 'Error: Copy failed!'; 
+      showToast = true; 
+    }
   }
 </script>
 
@@ -190,7 +198,7 @@
 
   <!-- Overlay to prevent interaction during hints -->
   {#if showHints}
-    <div class="hint-overlay" on:click|self={nextHint}></div>
+    <button class="hint-overlay" on:click|self={nextHint} aria-label="Hint Overlay"></button>
   {/if}
 
   <Toast bind:show={showToast} message={toastMessage} duration={2500} />
@@ -240,19 +248,28 @@
 <style>
   /* --- Orchestrator Layout Styles --- */
   .slot-machine-container {
-    display: flex; flex-direction: column; justify-content: center;
-    align-items: center; padding: 1rem; padding-top: 0; margin-top: -2.4rem;     
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    padding: 1rem; padding-top: 0; 
+    margin-top: -2.4rem;     
     background-color: none;
     min-height: 100vh; 
-    box-sizing: border-box; overflow: hidden;
+    box-sizing: border-box; 
+    overflow: hidden;
   }
 
   .upper-content {
-    display: flex; flex-direction: column; align-items: center;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
     width: 100%;
     /* Apply transition to transform for the shift */
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    margin-bottom: 1rem; position: relative; z-index: 5;
+    margin-bottom: 1rem; 
+    position: relative; 
+    z-index: 5;
   }
 
   .upper-content.shift-up {
@@ -262,46 +279,46 @@
 
   /* --- Title Image Styling --- */
   .title-cont {
-      width: 100%;
-      max-width: 350px; /* Adjust max width of title image */
-      margin-bottom: 1rem; /* Space below title */
+    width: 100%;
+    max-width: 350px; /* Adjust max width of title image */
+    margin-bottom: 1rem; /* Space below title */
   }
 
   .title-cont img {
-      display: block;
-      width: 100%;
-      height: auto;
-      /* ** Add transition for the scale ** */
-      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Match shift timing */
-      transform-origin: center bottom; /* Scale towards bottom center */
-      transform: scale(1); /* Initial scale */
+    display: block;
+    width: 100%;
+    height: auto;
+    /* ** Transition for the scale ** */
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Match shift timing */
+    transform-origin: center bottom; /* Scale towards bottom center */
+    transform: scale(1); /* Initial scale */
   }
 
   /* ** Style for when title should shrink ** */
   .upper-content.shrink-title .title-cont img {
-       transform: scale(0.5); /* Adjust scale factor (e.g., 75%) */
+    transform: scale(0.5); /* Adjust scale factor (e.g., 75%) */
   }
 
   /* --- Hint Overlay --- */
   .hint-overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-      z-index: 1000; /* Above content, below popover */
-      cursor: pointer; /* Indicate clickability */
-       /* Add a subtle fade-in */
-      opacity: 0;
-      animation: fade-in-overlay 0.3s ease-out forwards;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+    z-index: 1000; /* Above content, below popover */
+    cursor: pointer; /* Indicate clickability */
+      /* Add a subtle fade-in */
+    opacity: 0;
+    animation: fade-in-overlay 0.3s ease-out forwards;
   }
 
   @keyframes fade-in-overlay {
-      to { opacity: 1; }
+    to { opacity: 1; }
   }
 
   /* --- Keyframes needed globally or in parent --- */
   @keyframes resultGlow {
-      0% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 0px 0px rgba(255, 193, 7, 0); }
-      50% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 25px 10px rgba(255, 193, 7, 0.7); }
-      100% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 15px 5px rgba(255, 193, 7, 0.4); }
+    0% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 0px 0px rgba(255, 193, 7, 0); }
+    50% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 25px 10px rgba(255, 193, 7, 0.7); }
+    100% { box-shadow: 0 3px 6px rgba(0,0,0,0.2), 0 0 15px 5px rgba(255, 193, 7, 0.4); }
   }
 </style>

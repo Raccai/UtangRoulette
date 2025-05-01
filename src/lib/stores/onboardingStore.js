@@ -24,7 +24,6 @@ function markHintsAsShown() {
 
 // --- Export Store and Actions ---
 export const hintsShown = {
-    subscribe
-    // Don't expose set directly, use the action
+    subscribe // Don't expose set directly, use the action
 };
 export const markHintsShown = markHintsAsShown;

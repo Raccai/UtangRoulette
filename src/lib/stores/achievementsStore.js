@@ -1,11 +1,8 @@
-// src/lib/stores/achievementStore.js
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
 // --- Image Imports (or define paths directly) ---
-// Using dynamic imports might be possible but can be complex.
-// Direct imports are simpler if the list isn't huge.
-// Adjust paths as needed!
+// Might experiment with dynamic imports, though complex
 import firstSpinIcon from '$lib/assets/images/awards/FirstSpin.png';
 import dramaKingQueenIcon from '$lib/assets/images/awards/DramaKingQueen.png';
 import holyRollerIcon from '$lib/assets/images/awards/HolyRoller.png';
@@ -16,7 +13,6 @@ import paasaLevel100Icon from '$lib/assets/images/awards/PaasaLevel100.png';
 import bayaniNgUtangIcon from '$lib/assets/images/awards/BayaniNgUtang.png';
 import lockedIcon from '$lib/assets/images/awards/LockedBadge.png';
 
-
 // --- Initial State with Achievement Objects ---
 const initialState = {
   firstSpin:        { unlocked: false, name: "First Spin", image: firstSpinIcon, description: "Spin the wheel for the first time!" },
@@ -25,9 +21,9 @@ const initialState = {
   galitGalit:       { unlocked: false, name: "Galit Galit Muna", image: galitGalitIcon, description: "Land on 'Straight Galit' 3 times." },
   tiktokStar:       { unlocked: false, name: "TikTok Star", image: tiktokStarIcon, description: "Land on 'Tiktoker Style'." },
   sarcasticSupremo: { unlocked: false, name: "Sarcastic Supremo", image: sarcasticSupremoIcon, description: "Land on 'Sarcastic AF'." },
-  paasaLevel100:    { unlocked: false, name: "Paasa Level 100", image: paasaLevel100Icon, description: "Land on 'Mabait Reminder' 10 times?" }, // Example condition
-  bayaniNgUtang:    { unlocked: false, name: "Bayani Ng Utang", image: bayaniNgUtangIcon, description: "Complete 10 'transactions'?" }, // Example condition
-  // spinCount is separate, not an achievement object
+  paasaLevel100:    { unlocked: false, name: "Paasa Level 100", image: paasaLevel100Icon, description: "Land on 'Mabait Reminder' 10 times?" }, 
+  bayaniNgUtang:    { unlocked: false, name: "Bayani Ng Utang", image: bayaniNgUtangIcon, description: "Complete 10 'transactions'?" }, 
+  // spinCount is separate, not an achievement object, can add more achievements in the future
 };
 
 // Separate initial state for spin count
@@ -49,12 +45,14 @@ if (browser) {
                 if (parsed.hasOwnProperty(key) && typeof parsed[key] === 'object' && typeof parsed[key].unlocked === 'boolean') {
                     storedAchievements[key] = { ...initialState[key], unlocked: parsed[key].unlocked };
                 } else if (parsed.hasOwnProperty(key) && typeof parsed[key] === 'boolean') {
-                     // Handle migration from old boolean structure (optional)
-                     console.warn(`Migrating old achievement format for ${key}`);
-                     storedAchievements[key] = { ...initialState[key], unlocked: parsed[key] };
+                    // Handle migration from old boolean structure (optional)
+                    console.warn(`Migrating old achievement format for ${key}`);
+                    storedAchievements[key] = { ...initialState[key], unlocked: parsed[key] };
                 }
             }
-        } catch (e) { console.error("Failed to parse achievements from localStorage", e); storedAchievements = initialState; }
+        } catch (e) { 
+            console.error("Failed to parse achievements from localStorage", e); storedAchievements = initialState; 
+        }
     }
 }
 

@@ -37,7 +37,6 @@ export function spinTheWheel(messageType = 'mayUtang') {
     const selectedCategoryKey = selectedOption.key;
 
     // 2. Determine the message type using the passed argument
-    // *** REMOVED HARDCODED VALUE ***
     const currentMessageType = messageType;
     console.log(`[spinTheWheel] Using message type: ${currentMessageType}`); // Log which mode is used
 
