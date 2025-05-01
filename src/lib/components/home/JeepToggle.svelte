@@ -84,12 +84,6 @@
       padding: 5px; 
       position: relative; 
     }
-    .jeep-toggle-label input[type="radio"] { 
-      position: absolute; 
-      opacity: 0; 
-      width: 0; 
-      height: 0; 
-    }
     .jeep-toggle-label.active { 
       opacity: 1.0; 
       color: var(--jeep-yellow, #FFC107); 
