@@ -5,6 +5,7 @@
 	import { get } from 'svelte/store'; 
 	import { fly } from 'svelte/transition'; 
 	import { goto } from '$app/navigation';
+    import { SplashScreen } from '@capacitor/splash-screen';
 
 	// Store Imports
 	import { isLoading } from '$lib/stores/loadingStore'; 
@@ -20,7 +21,11 @@
 	let currentPath = $derived($page.url?.pathname ?? '');
 
 	onMount(() => {
-		goto("/home");
+        setTimeout(() => {
+            SplashScreen.hide();
+        }, 1000);
+        
+        goto("/home");
 
         if (get(isLoading)) { // Only proceed if it's currently true (initial load state)
             console.log("[Layout onMount] Initial loading detected. Setting timer to hide...");
